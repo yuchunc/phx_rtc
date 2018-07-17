@@ -18,3 +18,10 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Docs: https://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+## Trial Note
+
+  * Need OpenSSL for STUN lib
+  * Compile fast_tls by directing OpenSSL to brew installed version
+    * export CFLAGS="$CFLAGS -I/usr/local/Cellar/openssl/1.0.2o_2/include"
+      export LDFLAGS="$LDFLAGS -I/usr/local/Cellar/openssl/1.0.2o_2/lib"
