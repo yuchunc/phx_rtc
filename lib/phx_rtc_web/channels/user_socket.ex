@@ -3,6 +3,7 @@ defmodule PhxRtcWeb.UserSocket do
 
   ## Channels
   # channel "room:*", PhxRtcWeb.RoomChannel
+  channel "foo", PhxRtcWeb.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

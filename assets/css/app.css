@@ -1,1 +1,8 @@
-/* This file is for your main application css. */
+body {
+  font-family: sans-serif;
+}
+
+video {
+  max-width: 100%;
+  width: 320px;
+}
