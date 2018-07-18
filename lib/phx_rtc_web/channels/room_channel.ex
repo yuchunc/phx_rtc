@@ -25,10 +25,29 @@ defmodule PhxRtcWeb.RoomChannel do
         {:ok, _} = track_browser(socket, id)
         log(socket, "Client ID " <> id <> " joined room " <> socket.topic);
         push(socket, "joined", %{})
-      num ->
-        push(socket, "full", socket.topic)
+      _num ->
+        push(socket, "full", %{message: socket.topic})
     end
+    require IEx; IEx.pry
 
+
+    {:noreply, socket}
+  end
+
+  def handle_in("message", payload, socket) do
+    log(socket, "Client said: " <> payload)
+
+    broadcast(socket, "message", %{message: payload})
+
+    {:noreply, socket}
+  end
+
+  def handle_in("ipaddr", _, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_in("bye", _, socket) do
+    IO.inspect "got bye"
     {:noreply, socket}
   end
 

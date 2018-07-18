@@ -29,8 +29,8 @@ socket.connect()
 // Now that you are connected, you can join channels with a topic:
 var channel = socket.channel("foo", {})
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+  .receive("ok", resp => { console.log("Joined successfully", resp.message) })
+  .receive("error", resp => { console.log("Unable to join", resp.message) })
 
 var room = channel.topic;
 
@@ -44,22 +44,22 @@ if (room !== '') {
 }
 
 channel.on('created', function(room) {
-  console.log('Created room ' + room);
+  console.log('Created room ' + room.message);
   isInitiator = true;
 });
 
 channel.on('full', function(room) {
-  console.log('Room ' + room + ' is full');
+  console.log('Room ' + room.message + ' is full');
 });
 
 channel.on('join', function (room){
-  console.log('Another peer made a request to join room ' + room);
-  console.log('This peer is the initiator of room ' + room + '!');
+  console.log('Another peer made a request to join room ' + room.message);
+  console.log('This peer is the initiator of room ' + room.message + '!');
   isChannelReady = true;
 });
 
 channel.on('joined', function(room) {
-  console.log('joined: ' + room);
+  console.log('joined: ' + room.message);
   isChannelReady = true;
 });
 
