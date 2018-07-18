@@ -1,18 +1,35 @@
 defmodule PhxRtcWeb.RoomChannel do
   use PhxRtcWeb, :channel
+  alias PhxRtcWeb.Presence
 
-  def join("foo", payload, socket) do
-    if authorized?(payload) do
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
+  def join("foo", _, socket) do
+    {:ok, socket}
   end
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   def handle_in("ping", payload, socket) do
     {:reply, {:ok, payload}, socket}
+  end
+
+  def handle_in("create or join", %{"user_id" => id}, socket) do
+    IO.inspect "Received request to create or join room " <> socket.topic
+
+    case Presence.list(socket) |> Enum.count do
+      0 ->
+        {:ok, _} = track_browser(socket, id)
+        log(socket, "Client ID " <> id <> " created room " <> socket.topic);
+        push(socket, "created", %{})
+      1 ->
+        push(socket, "join", %{})
+        {:ok, _} = track_browser(socket, id)
+        log(socket, "Client ID " <> id <> " joined room " <> socket.topic);
+        push(socket, "joined", %{})
+      num ->
+        push(socket, "full", socket.topic)
+    end
+
+    {:noreply, socket}
   end
 
   # It is also common to receive messages from the client and
@@ -22,8 +39,19 @@ defmodule PhxRtcWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
+  def handle_in(event, payload, socket) do
+    IO.inspect({event, payload}, label: "event + payload")
+    {:noreply, socket}
+  end
+
+  defp track_browser(socket, id) do
+Presence.track(socket, id, %{
+      online_at: inspect(System.system_time(:seconds))
+    })
+  end
+
+  defp log(socket, something) do
+    message = "Message from server: " <> inspect(something)
+    push(socket, "log", %{ message: message })
   end
 end

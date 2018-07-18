@@ -33,12 +33,13 @@ channel.join()
   .receive("error", resp => { console.log("Unable to join", resp) })
 
 var room = channel.topic;
+
+var id = randomToken();
 // Could prompt for room name:
 // room = prompt('Enter room name:');
 
 if (room !== '') {
-  console.log(channel);
-  channel.push('create or join', {});
+  channel.push('create or join', {user_id: id});
   console.log('Attempted to create or  join room', room);
 }
 
@@ -257,6 +258,10 @@ function handleRemoteHangup() {
   console.log('Session terminated.');
   stop();
   isInitiator = false;
+}
+
+function randomToken() {
+  return Math.floor((1 + Math.random()) * 1e16).toString(16).substring(1);
 }
 
 function stop() {

@@ -12,6 +12,7 @@ defmodule PhxRtc.Application do
       #supervisor(PhxRtc.Repo, []),
       # Start the endpoint when the application starts
       supervisor(PhxRtcWeb.Endpoint, []),
+      supervisor(PhxRtcWeb.Presence, []),
       # Start your own worker by calling: PhxRtc.Worker.start_link(arg1, arg2, arg3)
       # worker(PhxRtc.Worker, [arg1, arg2, arg3]),
     ]
